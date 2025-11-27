@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Year Crossword</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f7f0;
+      text-align: center;
+      padding: 20px;
+      color: #222;
+    }
+    h1 {
+      color: #c1272d;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    .crossword {
+      display: inline-grid;
+      grid-template-columns: repeat(8, 40px);
+      grid-gap: 0;
+      margin: 20px auto;
+      border: 2px solid #2c5a2d;
+    }
+    .cell {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #2c5a2d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+      position: relative;
+      background-color: #d4edda;
+    }
+    .cell.empty {
+      background-color: white;
+      border: 1px solid #ccc;
+    }
+    .cell .num {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 10px;
+      color: #c1272d;
+      font-weight: bold;
+    }
+    .clues {
+      max-width: 500px;
+      margin: 30px auto;
+      text-align: left;
+      padding: 15px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .clues h2 {
+      color: #2c5a2d;
+      text-align: center;
+    }
+    .clue {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎄 New Year Crossword 🎄</h1>
+
+  <div class="crossword" id="grid"></div>
+
+  <div class="clues">
+    <h2>Clues</h2>
+    <div class="clue"><strong>1.</strong> Evergreen decorated during holidays</div>
+    <div class="clue"><strong>2.</strong> Jolly man in red who brings presents</div>
+    <div class="clue"><strong>3.</strong> Figure built from snow</div>
+    <div class="clue"><strong>4.</strong> Present wrapped in paper</div>
+    <div class="clue"><strong>5.</strong> Shiny symbol placed on top of the tree</div>
+  </div>
+
+  <script>
+    // Grid layout: 8x8
+    // Words:
+    // 1. TREE (horizontal, row 0, col 1–4)
+    // 2. SANTA (vertical, col 2, row 0–4)
+    // 3. SNOWMAN (horizontal, row 4, col 0–6)
+    // 4. GIFT (vertical, col 5, row 1–4)
+    // 5. STAR (vertical, starts at row 0, col 7 — but we'll place it horizontally for simplicity in small grid)
+
+    // For clarity and fit, final layout:
+    // Row 0: .  1T 2S  R  E  E  .  5S
+    // Row 1: .   .  A  .  .  4G .  T
+    // Row 2: .   .  N  .  .  I  .  A
+    // Row 3: .   .  T  .  .  F  .  R
+    // Row 4: 3S  N  A  W  M  T  N  .
+    // Row 5: .   .  .  .  .  .  .  .
+    // Row 6: .   .  .  .  .  .  .  .
+    // Row 7: .   .  .  .  .  .  .  .
+
+    const layout = [
+      ['.', '1T', '2S', 'R', 'E', 'E', '.', '5S'],
+      ['.', '.', 'A', '.', '.', '4G', '.', 'T'],
+      ['.', '.', 'N', '.', '.', 'I', '.', 'A'],
+      ['.', '.', 'T', '.', '.', 'F', '.', 'R'],
+      ['3S', 'N', 'A', 'W', 'M', 'T', 'N', '.'],
+      ['.', '.', '.', '.', '.', '.', '.', '.'],
+      ['.', '.', '.', '.', '.', '.', '.', '.'],
+      ['.', '.', '.', '.', '.', '.', '.', '.']
+    ];
+
+    const grid = document.getElementById('grid');
+    layout.forEach(row => {
+      row.forEach(cell => {
+        const div = document.createElement('div');
+        div.classList.add('cell');
+        if (cell === '.') {
+          div.classList.add('empty');
+        } else {
+          if (/^\d/.test(cell)) {
+            const num = cell.match(/^\d+/)[0];
+            const letter = cell.slice(num.length);
+            div.innerHTML = `<span class="num">${num}</span>${letter}`;
+          } else {
+            div.textContent = cell;
+          }
+        }
+        grid.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>

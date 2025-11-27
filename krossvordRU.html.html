@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Новогодний кроссворд</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+      color: #222;
+    }
+    h1 {
+      color: #d42300;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    .crossword {
+      display: inline-block;
+      margin: 20px auto;
+      border: 2px solid #2e7d32;
+      background-color: #e8f5e9;
+    }
+    .crossword-cell {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #2e7d32;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+      position: relative;
+      background-color: #c8e6c9;
+    }
+    .crossword-cell.empty {
+      background-color: white;
+      border: 1px solid #ccc;
+    }
+    .crossword-cell .number {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 10px;
+      color: #d42300;
+      font-weight: bold;
+    }
+    .clues {
+      max-width: 600px;
+      margin: 30px auto;
+      text-align: left;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .clues h2 {
+      color: #1b5e20;
+      text-align: center;
+    }
+    .clue {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎄 Новогодний кроссворд 🎄</h1>
+
+  <!-- Сетка кроссворда 10x10 -->
+  <div class="crossword" id="crossword">
+    <!-- Сгенерированная сетка -->
+  </div>
+
+  <div class="clues">
+    <h2>Подсказки</h2>
+    <div class="clue"><strong>1.</strong> Новогоднее дерево</div>
+    <div class="clue"><strong>2.</strong> Волшебник в красной шубе с посохом</div>
+    <div class="clue"><strong>3.</strong> Человечек из снега</div>
+    <div class="clue"><strong>4.</strong> То, что лежит под ёлкой в красивой бумаге</div>
+    <div class="clue"><strong>5.</strong> Праздничный фейерверк в виде бумажной трубки</div>
+    <div class="clue"><strong>6.</strong> Ароматный цитрус, символ Нового года</div>
+    <div class="clue"><strong>7.</strong> Праздник 31 декабря — 1 января</div>
+    <div class="clue"><strong>8.</strong> Транспорт Деда Мороза</div>
+    <div class="clue"><strong>9.</strong> Северное животное, тянет сани</div>
+    <div class="clue"><strong>10.</strong> Холодное время года</div>
+  </div>
+
+  <script>
+    // Сетка 10x10, где '.' — пустая клетка, буквы — заполненные
+    // Нумерация начальных клеток слов: 1–10
+    const grid = [
+      ['1Ё', 'Л', 'К', 'А', '.', '.', '.', '.', '.', '.'],   // 1. ЁЛКА (по горизонтали)
+      ['2Д', 'Е', 'Д', 'М', 'О', 'Р', 'О', 'З', '.', '.'], // 2. ДЕДМОРОЗ (гориз.)
+      ['3С', 'Н', 'Е', 'Г', 'О', 'В', 'И', 'К', '.', '.'], // 3. СНЕГОВИК (гориз.)
+      ['.', '4П', 'О', 'Д', 'А', 'Р', 'О', 'К', '.', '.'], // 4. ПОДАРОК (гориз.)
+      ['.', '.', '5Х', 'Л', 'О', 'П', 'У', 'Ш', 'К', 'А'], // 5. ХЛОПУШКА (гориз.)
+      ['.', '.', '.', '.', '6М', 'А', 'Н', 'Д', 'А', 'Р'], // 6. МАНДАРИН (гориз., обрезан — продолжение ниже)
+      ['.', '.', '.', '.', 'И', 'Н', '.', '.', '.', '.'],
+      ['7Н', 'О', 'В', 'Ы', 'Й', 'Г', 'О', 'Д', '.', '.'], // 7. НОВЫЙГОД (гориз.)
+      ['8С', 'А', 'Н', 'И', '.', '.', '.', '.', '.', '.'], // 8. САНИ (гориз.)
+      ['9О', 'Л', 'Е', 'Н', 'Ь', '.', '10З', 'И', 'М', 'А'] // 9. ОЛЕНЬ (гориз.), 10. ЗИМА (гориз.)
+    ];
+
+    const crossword = document.getElementById('crossword');
+    for (let row = 0; row < grid.length; row++) {
+      for (let col = 0; col < grid[row].length; col++) {
+        const cell = document.createElement('div');
+        cell.classList.add('crossword-cell');
+        const value = grid[row][col];
+
+        if (value === '.') {
+          cell.classList.add('empty');
+        } else {
+          // Проверяем, начинается ли клетка с цифры
+          if (/^\d/.test(value)) {
+            const number = value.match(/^\d+/)[0];
+            const letter = value.substring(number.length);
+            cell.innerHTML = `<span class="number">${number}</span>${letter}`;
+          } else {
+            cell.textContent = value;
+          }
+        }
+        crossword.appendChild(cell);
+      }
+    }
+  </script>
+</body>
+</html>
