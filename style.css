@@ -18,10 +18,11 @@ background-color: #fff8e1;
 }
 
 blockquote.q {
-	color: #D4AF37;
+	color: #ffa500;
 	border-left: 4px solid #8B0000;
 	font-style: italic;
 }
+
 p.quote {
 	font-family: "Pudelinka", cursive;
 	color: #ffa500
