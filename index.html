@@ -34,26 +34,73 @@
    <p>Иконки:<a href="https://www.flaticon.com/ru/free-icons/-" title="Полярный медведь иконки">Полярный медведь иконки от justicon - Flaticon</a>
 </p>
 </body>
-</html>
-<!DOCTYPE html>
-<html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Мой блог</title>
+  <title>Снежинки ❄️</title>
   <style>
-    /* Простая CSS-анимация */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0a2c47; /* тёмно-синий фон, как ночное небо */
+      overflow-x: hidden;
+      color: white;
+      font-family: sans-serif;
     }
 
-    .animated-text {
-      animation: fadeIn 1.5s ease-out forwards;
+    /* Стиль для снежинок */
+    .snowflake {
+      position: absolute;
+      top: -20px;
+      color: #fff;
+      font-size: 20px;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+      user-select: none;
+      z-index: 1000;
+      animation: fall linear infinite;
+    }
+
+    /* Анимация падения */
+    @keyframes fall {
+      to {
+        transform: translateY(105vh) rotate(360deg);
+      }
+    }
+
+    /* Заголовок для примера */
+    h1 {
+      text-align: center;
+      padding-top: 50px;
+      font-size: 2.5rem;
     }
   </style>
 </head>
 <body>
-  <h1 class="animated-text">Привет! Это мой блог 🌟</h1>
+  <h1>С Новым Годом! ❄️</h1>
+
+  <!-- Скрипт создаёт снежинки -->
+  <script>
+    const snowflakes = 30; // количество снежинок
+    const container = document.body;
+
+    for (let i = 0; i < snowflakes; i++) {
+      const snowflake = document.createElement('div');
+      snowflake.innerHTML = '❄';
+      snowflake.className = 'snowflake';
+
+      // Случайные параметры
+      const size = Math.random() * 20 + 10; // от 10px до 30px
+      const left = Math.random() * 100; // позиция по горизонтали (%)
+      const duration = Math.random() * 10 + 5; // от 5 до 15 секунд
+      const delay = Math.random() * 5; // задержка старта
+
+      snowflake.style.left = `${left}vw`;
+      snowflake.style.fontSize = `${size}px`;
+      snowflake.style.animationDuration = `${duration}s`;
+      snowflake.style.animationDelay = `${delay}s`;
+
+      container.appendChild(snowflake);
+    }
+  </script>
 </body>
 </html>
