@@ -9,6 +9,249 @@
   <title>Привет мир</title>
 </head>
 <body>
+ <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>БД Стоматология - Database Schema</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .database-title {
+            background: #e3f2fd;
+            border: 3px solid #1976d2;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        .entities-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .entity {
+            background: #c8e6c9;
+            border: 2px solid #388e3c;
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 300px;
+            flex: 1;
+            max-width: 350px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .entity-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #388e3c;
+            padding-bottom: 10px;
+        }
+
+        .field {
+            padding: 8px 0;
+            border-bottom: 1px solid #a5d6a7;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .field:last-child {
+            border-bottom: none;
+        }
+
+        .field-name {
+            color: #1b5e20;
+            font-weight: bold;
+        }
+
+        .field-value {
+            color: #555;
+            margin-left: 5px;
+        }
+
+        .relationships {
+            margin-top: 40px;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .relationships h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .relationship-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #1976d2;
+        }
+
+        @media (max-width: 768px) {
+            .entities-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .entity {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 База Данных</h1>
+        
+        <div class="database-title">
+            БД Стоматология
+        </div>
+
+        <div class="entities-container">
+            <!-- Doctor Entity -->
+            <div class="entity">
+                <div class="entity-title">👨‍⚕️ Doctor</div>
+                <div class="field">
+                    <span class="field-name">doctor_id:</span>
+                    <span class="field-value">DOC-2024-00157</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">specialization:</span>
+                    <span class="field-value">-</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">qualification_category:</span>
+                    <span class="field-value">Высшая категория</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">experience_years:</span>
+                    <span class="field-value">15</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">accreditation_status:</span>
+                    <span class="field-value">Действует (до 12.2027)</span>
+                </div>
+            </div>
+
+            <!-- Nurse Entity -->
+            <div class="entity">
+                <div class="entity-title">👩‍⚕️ Nurse</div>
+                <div class="field">
+                    <span class="field-name">nurse_id:</span>
+                    <span class="field-value">NRS-2023-00421</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">department_profile:</span>
+                    <span class="field-value">Терапевтическое отделение</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">qualification_category:</span>
+                    <span class="field-value">Высшая категория</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">additional_certifications:</span>
+                    <span class="field-value">"Внутривенные инъекции", "Неотложная помощь", "Работа с инфузоматами"</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">nursing_experience_years:</span>
+                    <span class="field-value">12</span>
+                </div>
+            </div>
+
+            <!-- Operation Entity -->
+            <div class="entity">
+                <div class="entity-title">🔬 Operation</div>
+                <div class="field">
+                    <span class="field-name">operation_id:</span>
+                    <span class="field-value">OP-2024-00312</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">complexity_category:</span>
+                    <span class="field-value">Средней сложности</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">urgency_type:</span>
+                    <span class="field-value">Плановая</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">anesthesia_type:</span>
+                    <span class="field-value">Эндотрахеальный наркоз</span>
+                </div>
+                <div class="field">
+                    <span class="field-name">duration_minutes:</span>
+                    <span class="field-value">95</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="relationships">
+            <h2>📊 Схема взаимосвязей</h2>
+            <div class="relationship-diagram">
+                <div>👨‍⚕️ Doctor</div>
+                <div class="arrow">⟷</div>
+                <div>👩‍️ Nurse</div>
+                <div class="arrow">⟷</div>
+                <div>🔬 Operation</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>База данных стоматологической клиники | 2024</p>
+        </div>
+    </div>
+</body>
+</html>
   <h>13 апреля 2026</h>
 <!DOCTYPE html>
 <html lang="ru">
