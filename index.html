@@ -9,6 +9,427 @@
   <title>Привет мир</title>
 </head>
 <body>
+  <!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🦷 Стоматология: Модель БД + Индексы</title>
+  <style>
+    :root {
+      --primary: #1565C0;
+      --secondary: #2E7D32;
+      --accent: #EF6C00;
+      --bg: #f8f9fa;
+      --card: #ffffff;
+      --text: #212121;
+      --text-light: #757575;
+      --border: #e0e0e0;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 40px;
+    }
+    header {
+      background: linear-gradient(135deg, var(--primary), #0D47A1);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    header p { opacity: 0.9; font-size: 1.1rem; }
+    
+    nav {
+      background: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+      padding: 0.5rem 0;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      list-style: none;
+      gap: 0.5rem;
+      padding: 0 1rem;
+    }
+    nav a {
+      display: block;
+      padding: 0.6rem 1.2rem;
+      text-decoration: none;
+      color: var(--text);
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+    nav a:hover, nav a.active {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    section h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+      font-size: 1.4rem;
+    }
+    
+    .diagram-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 1rem 0;
+      background: #fafafa;
+    }
+    .diagram-header {
+      padding: 0.8rem 1rem;
+      background: #f1f3f4;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .diagram-title {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 1.05rem;
+    }
+    .diagram-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.9rem;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover { background: #0D47A1; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-sm { padding: 0.3rem 0.7rem; font-size: 0.85rem; }
+    
+    .diagram-content {
+      padding: 1rem;
+      text-align: center;
+      background: white;
+    }
+    .diagram-content img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .diagram-content img:hover {
+      transform: scale(1.02);
+    }
+    .diagram-caption {
+      margin-top: 0.8rem;
+      color: var(--text-light);
+      font-size: 0.95rem;
+      text-align: left;
+    }
+    
+    .index-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .index-card {
+      background: #f8f9fa;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .index-card h4 {
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+    .index-card ul {
+      list-style: none;
+      padding-left: 0;
+      font-size: 0.95rem;
+    }
+    .index-card li {
+      padding: 0.25rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+    .index-card li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+    
+    .query-box {
+      background: #E8EAF6;
+      border-left: 4px solid var(--primary);
+      padding: 1rem 1.2rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+    }
+    .query-box code {
+      background: rgba(255,255,255,0.7);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.95rem;
+    }
+    
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #fffde7;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+    .legend-color.doctor { background: #E3F2FD; border-color: #1565C0; }
+    .legend-color.nurse { background: #FFF3E0; border-color: #EF6C00; }
+    .legend-color.operation { background: #E8F5E9; border-color: #2E7D32; }
+    .legend-color.index { background: #FFF9C4; border-color: #F9A825; }
+    
+    footer {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 0.95rem;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    /* Modal for enlarged image */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      max-width: 95%;
+      max-height: 95%;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    @media (max-width: 768px) {
+      header h1 { font-size: 1.5rem; }
+      nav ul { flex-direction: column; align-items: center; }
+      .diagram-header { flex-direction: column; align-items: flex-start; }
+      .legend { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🦷 Стоматологическое отделение</h1>
+    <p>Модель данных • Сущности • Индексы • Схемы</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="#model" class="active">📊 Модель</a></li>
+      <li><a href="#primary-index">🔑 Основные индексы</a></li>
+      <li><a href="#secondary-index">🔍 Вторичные индексы</a></li>
+      <li><a href="#query">❓ Запрос</a></li>
+      <li><a href="#download">📥 Скачать</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+
+    <!-- РАЗДЕЛ 1: Иерархическая модель -->
+    <section id="model">
+      <h2>📊 1. Иерархическая модель сущностей</h2>
+      
+      <div class="diagram-card">
+        <div class="diagram-header">
+          <span class="diagram-title">ER-диаграмма: Врач ↔ Операция ↔ Медсестра</span>
+          <div class="diagram-actions">
+            <button class="btn btn-sm btn-outline" onclick="viewDrawio('hierarchical')">🔍 Открыть в draw.io</button>
+            <a href="1_hierarchical_model.drawio" class="btn btn-sm" download>⬇️ Скачать .drawio</a>
+          </div>
+        </div>
+        <div class="diagram-content">
+          <img src="1_hierarchical_model.png" alt="Иерархическая модель" onclick="openModal(this)">
+          <div class="diagram-caption">
+            <strong>Сущности:</strong><br>
+            • <span style="color:#1565C0">👨‍⚕️ Врач</span>: doctor_id (PK), full_name, specialization, license_number, experience_years<br>
+            • <span style="color:#2E7D32">🦷 Операция</span>: operation_id (PK), procedure_name, date_time, duration_min, status<br>
+            • <span style="color:#EF6C00">👩‍⚕️ Медсестра</span>: nurse_id (PK), full_name, category, room_number, phone_internal<br>
+            <strong>Связи:</strong> Врач «проводит» Операцию (1:N), Медсестра «ассистирует» Операции (M:N)
+          </div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-color doctor"></div> Врач</div>
+        <div class="legend-item"><div class="legend-color nurse"></div> Медсестра</div>
+        <div class="legend-item"><div class="legend-color operation"></div> Операция</div>
+        <div class="legend-item"><div class="legend-color index"></div> Индекс</div>
+      </div>
+    </section>
+
+    <!-- РАЗДЕЛ 2: Основные индексы -->
+    <section id="primary-index">
+      <h2>🔑 2. Схемы формирования ОСНОВНЫХ индексов (Primary Key)</h2>
+      <p>Основной индекс строится по первичному ключу (PK) и использует структуру <strong>B-дерева</strong> для быстрого поиска записей по ID.</p>
+      
+      <div class="index-grid">
+        <div class="index-card">
+          <h4>👨‍⚕️ Врач: PK = doctor_id</h4>
+          <ul>
+            <li>Root: [100–199]</li>
+            <li>Leaf: [101–149], [150–199]</li>
+            <li>Указатель: doctor_id=155 → запись «Иванов И.И.»</li>
+          </ul>
+          <div style="margin-top:0.8rem">
+            <a href="2_index_doctor.drawio" class="btn btn-sm btn-outline" download>📄 Схема .drawio</a>
+          </div>
+        </div>
+        
+        <div class="index-card">
+          <h4>👩‍⚕️ Медсестра: PK = nurse_id</h4>
+          <ul>
+            <li>Root: [200–299]</li>
+            <li>Leaf: [201–249], [250–299]</li>
+            <li>Указатель: nurse_id=255 → запись «Петрова М.С.»</li>
+          </ul>
+          <div style="margin-top:0.8rem">
+            <a href="3_index_nurse.drawio" class="btn btn-sm btn-outline" download>📄 Схема .drawio</a>
+          </div>
+        </div>
+        
+        <div class="index-card">
+          <h4>🦷 Операция: PK = operation_id</h4>
+          <ul>
+            <li>Root: [300–399]</li>
+            <li>Leaf: [301–349], [350–399]</li>
+            <li>Указатель: operation_id=355 → запись «Удаление зуба»</li>
+          </ul>
+          <div style="margin-top:0.8rem">
+            <a href="4_index_operation.drawio" class="btn btn-sm btn-outline" download>📄 Схема .drawio</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- РАЗДЕЛ 3: Вторичные индексы -->
+    <section id="secondary-index">
+      <h2>🔍 3. ВТОРИЧНЫЕ индексы (по 3 на сущность)</h2>
+      <p>Вторичные индексы ускоряют поиск по неключевым атрибутам. Хранят пары: <code>Значение → [список ID записей]</code>.</p>
+      
+      <div class="index-grid">
+        <div class="index-card">
+          <h4>👨‍⚕️ Врач</h4>
+          <ul>
+            <li><strong>specialization</strong>: «Хирург» → [101,105,112]</li>
+            <li><strong>full_name</strong> (prefix): «Иванов» → [101]</li>
+            <li><strong>experience_years</strong>: «>10 лет» → [101,105]</li>
+          </ul>
+          <a href="5_secondary_indices_doctor.drawio" class="btn btn-sm btn-outline" download style="margin-top:0.8rem">📄 Схема</a>
+        </div>
+        
+        <div class="index-card">
+          <h4>👩‍⚕️ Медсестра</h4>
+          <ul>
+            <li><strong>category</strong>: «Высшая» → [201,207]</li>
+            <li><strong>room_number</strong>: «305» → [201,205]</li>
+            <li><strong>phone_internal</strong>: «x1234» → [201]</li>
+          </ul>
+          <a href="6_secondary_indices_nurse.drawio" class="btn btn-sm btn-outline" download style="margin-top:0.8rem">📄 Схема</a>
+        </div>
+        
+        <div class="index-card">
+          <h4>🦷 Операция</h4>
+          <ul>
+            <li><strong>status</strong>: «Завершена» → [301,305]</li>
+            <li><strong>date_time</strong> (range): «2024-04-15» → [301,302]</li>
+            <li><strong>procedure_name</strong>: «Удаление» → [301,307]</li>
+          </ul>
+          <a href="7_secondary_indices_operation.drawio" class="btn btn-sm btn-outline" download style="margin-top:0.8rem">📄 Схема</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- РАЗДЕ
   <h>30 марта 2026</h>
   <p>Итоговые результаты (нормализованные значения):
 Ошибка на обучении (MSE): 0.004438
